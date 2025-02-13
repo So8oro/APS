@@ -26,4 +26,4 @@ for tc in range(1,1+T):
                 if max_area < height*length:
                     max_area = height*length
 
-    print(f'#{1} {max_area}')
+    print(f'#{tc} {max_area}')

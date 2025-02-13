@@ -19,10 +19,6 @@ for tc in range(1,T+1):
 
     arr_values = list(arr_values)
 
-    if len(arr_values)==N**2:
-        print(f'#{tc} {N**2}')      # 만약 같은 값이 하나도 없다면 모든 요소가 각각 싸피부분배열
-        break
-
     # 밸류 하나씩 다 보자
     for value in arr_values:
         target = []     # 타겟값들의 위치 저장
