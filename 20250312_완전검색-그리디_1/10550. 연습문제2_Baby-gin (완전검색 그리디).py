@@ -1,19 +1,8 @@
 import sys
 sys.stdin = open('input.txt','r')
 
-T = int(input())
 
-for tc in range(1,T+1):
-
-    p = list(map(int,input()))
-
-    if tc==5:
-        print(f'#{tc} Baby Gin')
-        continue
-
-    p.sort()
-
-    result = 'Lose'
+def is_babygin():
     tri = ru = 0
     if p[0] == p[1] == p[2]:
         tri += 1
@@ -24,11 +13,33 @@ for tc in range(1,T+1):
     if p[3] + 2 == p[4] + 1 == p[5]:
         ru += 1
     if tri + ru == 2:
-        result = 'Baby Gin'
+        return True
+    else:
+        return False
 
 
-    print(f'#{tc} {result}')
+def f(i, N):
+    global ans
+    if i == N:
+        if is_babygin():
+            ans = 'Baby Gin'
+    else:
+        for j in range(N):
+            if used[j] == 0:
+                used[j] = 1
+                p[i] = a[j]
+                f(i + 1, N)
+                used[j] = 0
 
+
+T = int(input())
+for tc in range(1, T + 1):
+    a = list(map(int, input()))
+    used = [0] * 6
+    p = [0] * 6
+    ans = 'Lose'
+    f(0, 6)
+    print(f'#{tc} {ans}')
 
 
 # print('#1 Baby Gin')
