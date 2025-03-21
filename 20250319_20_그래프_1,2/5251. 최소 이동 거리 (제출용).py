@@ -5,48 +5,37 @@ T = int(input())
 
 for tc in range(1,T+1):
     N,E = map(int,input().split())
-    arr = [list(map(int,input().split())) for _ in range(E)]
-    # [시작, 끝, 거리]
-    # 0에서 N 까지 가는 최소 거리
-    # 0에서
 
-    print(f'#{tc}')
+    INF = 9990      # 끝지점이 1000, 가중치 최댓값이 10이므로 이론상 최댓값
+    arr = [[INF]*(N+1) for _ in range(N+1)]     # 초기값은 최대로 설정
 
+    for _ in range(E):
+        s,e,w = map(int,input().split())
+        arr[s][e] = w       # 직접 연결된 노드들에 값을 부여
 
-    def dijkstra(s, N):
-        U = [0] * (N + 1)  # U = {s}
-        U[s] = 1  # U = [], U.append(0)
-        D = [0] * (N + 1)  # D <- A[s]    #, 출발점에서 다른 정점으로 가는 비용
-        # 저장용으로 미리 만들어두었다는 뜻이구나
-        for i in range(N + 1):
-            D[i] = adj_m[s][i]  # s 출발정점
-            # 출발에서 i 로 가는 비용이 있다면, i에 저장한다. 즉 직행이 얼마인지. 없으면 우선 무한대
-        # 출발점을 제외한 N개의 정점에 대한 비용 결정
-        for _ in range(N):
-            # 비용이 결정되지 않은 정점 중에 D[t]가 최소인 t
-            min_v = INF
-            t = 0
-            for i in range(N + 1):
-                if U[i] == 0 and min_v > D[i]:
-                    min_v = D[i]
-                    t = i
-            U[t] = 1  # t는 최소비용 결정
-            for j in range(N + 1):  # t에 인접한 j 찾기
-                if 0 < adj_m[t][j] < INF:
-                    D[j] = min(D[j], D[t] + adj_m[t][j])
-        return D[N]
+    for i in range(N+1):
+        arr[i][i] = 0       # 자기 자신과의 거리는 0
 
+    U = [1]+[0]*N       # 최소거리가 확정된 노드는 1, 아닌 것은 0으로 표기. 시작점 자신은 확정되어 있음.
+    D = [0]*(N+1)       # i번 노드까지의 현재 최소 거리를 저장
 
-    INF = int(1e8)
-    T = int(input())
-    for tc in range(1, T + 1):
-        N, E = map(int, input().split())  # 마지막 지점 번호 N과 도로의 개수 E
-        # 인접행렬은 무한대로 초기화
-        adj_m = [[INF] * (N + 1) for _ in range(N + 1)]
-        for i in range(N + 1):
-            adj_m[i][i] = 0  # 자기 자신에 대한 비용 0
-        for _ in range(E):
-            s, e, w = map(int, input().split())
-            adj_m[s][e] = w
+    # 일단 D에 직행 거리들을 저장하자
+    for i in range(N+1):
+        D[i] = arr[0][i]
 
-        print(f'#{tc} {dijkstra(0, N)}')
+    while U[N] != 1:        # U[N] == 1, 즉 최소거리임이 확정되면 종료하고 해당 값을 출력할 것이다.
+        # 현재 제일 짧은 것을 찾아서 최소거리로 확정짓는다.
+        min_v = INF
+        t = 0
+        for i in range(N+1):
+            if U[i]==0 and min_v > D[i]:    # 0인거만 봐야 한다. 1인 것은 이미 이전에 최소로 확정된 것.
+                min_v = D[i]
+                t = i
+        U[t] = 1
+
+        # 이제 그 다음 값을 업데이트 해야한다. t에 인접한 점들을 업데이트 하자.
+        for i in range(N+1):
+            if arr[t][i] < INF:     # t에서 인접한 노드라면,
+                D[i] = min(D[i], D[t]+arr[t][i])
+
+    print(f'#{tc} {D[N]}')
